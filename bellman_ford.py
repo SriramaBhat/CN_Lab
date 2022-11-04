@@ -33,16 +33,13 @@ class Graph:
 
 
 if __name__ == "__main__":
-    print("Enter the number of vertices of the graph:")
-    vertex_no = int(input())
-    print("Enter the number of edges of the graph:")
-    edges = int(input())
+    vertex_no = int(input("Enter the number of vertices of the graph:"))
+    edges = int(input("Enter the number of edges of the graph:"))
     input_graph = Graph(vertex_no)
     print("Enter the edge in the format SOURCE, DESTINATION and WEIGHT in a SINGLE LINE:")
     for _ in range(edges):
         source, des, weight = map(int, input().split())
         input_graph.add_edge(source, des, weight)
 
-    print("Enter the source vertex to begin the algorithm:")
-    source = int(input())
+    source = int(input("Enter the source vertex to begin the algorithm:"))
     input_graph.bellman_ford(source)
