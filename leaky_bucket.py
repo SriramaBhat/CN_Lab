@@ -1,3 +1,5 @@
+# Program to implement the leaky bucket algorithm
+
 import time
 import random
 
