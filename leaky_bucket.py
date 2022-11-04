@@ -59,7 +59,7 @@ class LeakyBucket:
 
             for id_no in packet_id:
                 print("Output has packet with id_no = {}".format(id_no))
-            print(f"Successful output, {} units is transmitted.".format(transmit_size))
+            print("Successful output, {} units is transmitted.".format(transmit_size))
             return 0
 
 
