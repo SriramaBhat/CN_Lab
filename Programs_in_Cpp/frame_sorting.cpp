@@ -10,8 +10,6 @@ typedef struct Frame {
     string data;
 } Frame;
 
-vector<int> id;
-
 bool compare(Frame a, Frame b) {
     return (a.sqNum < b.sqNum) ? true : false;
 }
@@ -26,7 +24,6 @@ int main() {
         Frame f;
         cin >> f.sqNum >> f.data;
         frames.push_back(f);
-        id.push_back(f.sqNum);
     }
     sort(frames.begin(), frames.end(), compare);
     cout << "The frames in original sequence: " << endl;
