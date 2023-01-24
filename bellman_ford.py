@@ -2,18 +2,19 @@
 from sys import maxsize
 
 
+# Class denoting the graph for the algorithm to be applied
 class Graph:
     def __init__(self, vertices):
         self.V = vertices  # Initializing the number of vertices
         self.graph = []
 
     def add_edge(self, src, destination, wt):
-        self.graph.append([src, destination, wt])
+        self.graph.append([src, destination, wt])  # Adding an edge to the graph list
 
     def print_distance(self, dist):
         print("Vertex\t\tDistance from source")
         for i in range(self.V):
-            print("{}\t\t{}".format(i, dist[i]))
+            print("{}\t\t{}".format(i, dist[i]))  # Printing the result
 
     def bellman_ford(self, src):
         dist = [maxsize] * self.V
@@ -26,7 +27,7 @@ class Graph:
 
         for u, v, w in self.graph:
             if dist[u] != maxsize and dist[u] + w < dist[v]:
-                print("Graph contains negative weight cycle")
+                print("Graph contains negative weight cycle")  # Checking if negetive weighted cycle is present
                 return
 
         self.print_distance(dist)
