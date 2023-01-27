@@ -1,30 +1,34 @@
+package practice_programs;
+
 import java.net.*;
 import java.io.*;
 
 public class TCPServer {
-    public static void main(String args[]) throws Exception { // establishing the connection with the server
+    public static void main(String[] args) throws Exception {
         ServerSocket sersock = new ServerSocket(4000);
-        System.out.println("Server ready for connection");
-        Socket sock = sersock.accept(); // binding with port: 4000
-        System.out.println("Connection is successful and waiting for chatting");
-        // reading the file name from client
-        InputStream istream = sock.getInputStream();
-        BufferedReader fileRead = new BufferedReader(new InputStreamReader(istream));
-        String fname = fileRead.readLine();
-        // reading file contents
-        BufferedReader contentRead = new BufferedReader(new FileReader(fname));
-        // keeping output stream ready to send the contents
+        System.out.println("Server Connected, waiting for client");
+        Socket sock = sersock.accept();
+        System.out.println("Connection successful, waiting for chatting");
+        InputStream iStream = sock.getInputStream();
+        BufferedReader nameRead = new BufferedReader(new InputStreamReader(iStream));
+        String fname = nameRead.readLine();
         OutputStream ostream = sock.getOutputStream();
         PrintWriter pwrite = new PrintWriter(ostream, true);
-        String str;
-        // reading line-by-line from file
-        while ((str = contentRead.readLine()) != null) {
-            pwrite.println(str); // sending each line to client
+        try {
+            BufferedReader contentRead = new BufferedReader(new FileReader(fname));
+            String str;
+            while ((str = contentRead.readLine()) != null) {
+                pwrite.println(str);
+            }
+            contentRead.close();
+        } catch (FileNotFoundException e) {
+            pwrite.println("File does not exist");
+        } finally {
+            System.out.println("Closing connection");
+            pwrite.close();
+            nameRead.close();
+            sock.close();
+            sersock.close();
         }
-        sock.close();
-        sersock.close(); // closing network sockets
-        pwrite.close();
-        fileRead.close();
-        contentRead.close();
     }
 }
