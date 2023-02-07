@@ -7,6 +7,39 @@ class Frame:
         self.data = data
         
 
+def merge_sort(arr):
+    if(len(arr) > 1):
+        left_arr = arr[:len(arr)//2]
+        right_arr = arr[len(arr)//2:]
+        
+        merge_sort(left_arr)
+        merge_sort(right_arr)
+        
+        i = 0
+        j = 0
+        k = 0
+        
+        while i<len(left_arr) and j<len(right_arr):
+            if left_arr[i].seqNo < right_arr[j].seqNo:
+                arr[k] = left_arr[i]
+                i += 1
+            else:
+                arr[k] = right_arr[j]
+                j += 1    
+            k += 1
+            
+        while i < len(left_arr):
+            arr[k] = left_arr[i]
+            i += 1
+            k += 1
+            
+        while j < len(right_arr):
+            arr[k] = right_arr[j]
+            j += 1
+            k += 1
+            
+
+
 def bubble_sort(arr):
     flag = 0
     for i in range(len(arr)):
@@ -40,7 +73,7 @@ for _ in range(n):
 for i in range(n):
     frames[i].data = input(f"Enter frame data for the sequence number {frames[i].seqNo} : ")
     
-bubble_sort(frames)
+merge_sort(frames)
 print("\n----------Sorted Frames---------")
 for frame in frames:
     print(f"{frame.seqNo} - {frame.data}")
