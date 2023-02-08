@@ -2,21 +2,17 @@ import java.net.*;
 import java.io.*;
 
 public class UDPServer {
-    public static void main(String[] args) {
-        try {
-            String message = args[0];
-            int serverPortNumber = Integer.parseInt(args[1]);
-            ServerSocket connectionSocket = new ServerSocket(serverPortNumber);
-            Socket dataSocket = connectionSocket.accept();
-            PrintStream socketOutput = new PrintStream(dataSocket.getOutputStream());
-            socketOutput.println(message);
-            System.out.println("sent response to client");
-            socketOutput.flush();
-            dataSocket.close();
-            connectionSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
+        DatagramSocket sersock = new DatagramSocket(3000);
+        byte[] buffer = new byte[1024];
+        DatagramPacket req = new DatagramPacket(buffer, buffer.length);
+        sersock.receive(req);
+        System.out.println("Enter the message to be transmitted: ");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String message = br.readLine();
+        byte[] msg = message.getBytes();
+        DatagramPacket reply = new DatagramPacket(msg, msg.length, req.getAddress(), req.getPort());
+        sersock.send(reply);
+        sersock.close();
     }
-
 }
