@@ -5,6 +5,7 @@ public class UDPServer {
     public static void main(String[] args) throws Exception {
         DatagramSocket sersock = new DatagramSocket(3000);
         byte[] buffer = new byte[1024];
+        System.out.println("Server ready waiting for client");
         DatagramPacket req = new DatagramPacket(buffer, buffer.length);
         sersock.receive(req);
         System.out.println("Enter the message to be transmitted: ");
