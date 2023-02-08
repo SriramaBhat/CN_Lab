@@ -3,15 +3,16 @@ import java.io.*;
 
 public class UDPClient {
     public static void main(String[] args) {
-        try {
-            InetAddress acceptorHost = InetAddress.getByName(args[0]);
-            int serverPortNum = Integer.parseInt(args[1]);
-            Socket clientSocket = new Socket(acceptorHost, serverPortNum);
-            BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            System.out.println(br.readLine());
-            clientSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        DatagramSocket client = new DatagramSocket();
+        byte[] b = "request".getBytes();
+        InetAddress ip = InetAddress.getByName("127.0.0.1");
+        DatagramPacket req = new DatagramPacket(b, b.length, ip, 3000);
+        byte[] buffer = new byte[1024];
+        client.send(req);
+        DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+        client.receive(reply);
+        System.out.println("Received message is: ");
+        System.out.println(new String(reply.getData()));
+        client.close();
     }
 }
