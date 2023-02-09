@@ -1,95 +1,68 @@
-// Program to demonstrate leaky bucket algorithm
-#include <iostream>
-#include <cstdlib>
-#include <vector>
-#include <time.h>
-#ifdef _WIN32
+#include <bits/stdc++.h>
 #include <windows.h>
-#else
-#include <unistd.h>
-#endif
-
 using namespace std;
 
 typedef struct Packet {
-    int id, size;
-} Packet;
-
-class LeakyBucket {
-    public:
-        int bucketSize;
-        int leakRate;
-        int curBufferSize;
-        vector<Packet> buffer;
-
-        LeakyBucket(int size, int rate) {
-            bucketSize = size;
-            leakRate = rate;
-            curBufferSize = 0;          
-        }
-
-        void addPacket(Packet p) {
-            if(curBufferSize + p.size > bucketSize) {
-                cout << "Bucket full, package rejected" << endl;
-                return;
-            }
-
-            buffer.push_back(p);
-            curBufferSize += p.size;
-            cout << "Packet with id " << p.id << " and size " << p.size << " is added to the bucket" << endl;          
-        }
-
-        int leakage() {
-            if(buffer.size() == 0) {
-                cout << "No packets are in the bucket!" << endl;
-                return -1;
-            } else {
-                int n = leakRate;
-                int size = 0;
-                vector<int> pid;
-                while(buffer.size() != 0 && n!=0) {
-                    if(buffer.at(0).size > n) {
-                        buffer.at(0).size -= n;
-                        pid.push_back(buffer.at(0).id);
-                        size += n;
-                        n = 0;
-                    } else {
-                        n -= buffer.at(0).size;
-                        size += buffer.at(0).size;
-                        curBufferSize -= buffer.at(0).size;
-                        pid.push_back(buffer.at(0).id);
-                        buffer.erase(buffer.begin());
-                    }
-                }
-
-                for(int i=0; i<pid.size(); i++)
-                    cout << "Packet with id = " << pid.at(i) << " is in the output" << endl;
-                cout << "Successful output with " << size << " units transmitted" << endl;
-                return 0;
-            }
-        } 
-};
+    int id;
+    int size;
+} packet;
 
 int main() {
-    cout << "Enter the bucket size and output rate:" << endl;
-    int cap, rate;
-    cin >> cap >> rate;
-    LeakyBucket b = LeakyBucket(cap, rate);
-    srand(time(0));
-    for(int i=0; i<10; i++) {
-        Packet p;
-        p.id = i+1;
-        p.size = rand()%200;
-        b.addPacket(p);
-    }
+    srand(time(NULL));
+    int bucketSize, curSize, outputRate;
+    cout << "Enter the bucket size: " << endl;
+    cin >> bucketSize;
+    cout << "Enter the output rate: " << endl;
+    cin >> outputRate;
+    vector<packet> stored;
+    int id = 0;
+    int i =0;
+    cout << "--------------------------------------------" << endl;
 
-    while (true) {
-        int temp = b.leakage();
-        if(temp == -1)
+    while(true) {
+        Sleep(1000);
+        cout << "At second " << i << ": \n" << endl;
+        i++;
+        for(int j=0; j<rand()%3+1; j++) {
+            packet p;
+            p.id = id;
+            id++;
+            p.size = rand()%(bucketSize*2);
+            if(curSize + p.size > bucketSize) {
+                cout << "Packet with id " << p.id << " and size " << p.size << " dropped" << endl;
+            } else {
+                stored.push_back(p);
+                curSize += p.size;
+                cout << "Packet with id " << p.id << " and size " << p.size << " stored" << endl;
+            }
+        }
+
+        cout << "Packets before transmission is " << stored.size() << endl;        
+        int n = outputRate;
+        int rate = 0;
+        while(n != 0) {
+            if(n < stored[0].size) {
+                cout << "Packet with id " << stored[0].id << " and size " << stored[0].size << " partially transmitted" << endl;
+                stored[0].size -= n;
+                curSize -= n;
+                rate = outputRate;
+                n = 0;
+            } else {
+                curSize -= stored[0].size;
+                cout << "Packet with id " << stored[0].id << " and size " << stored[0].size << " transmitted" << endl;
+                n -= stored[0].size;
+                rate += stored[0].size;
+                stored.erase(stored.begin());
+            }
+        }
+
+        cout << "Packets after transmission is " << stored.size() << endl;
+        cout << "Output rate is " << rate << endl;
+
+        if(stored.size() == 0) {
             break;
-        cout << "Interval" << endl;
-        Sleep(1);
-    }
+        }
 
-    return 0;
+        cout << "----------------------------------------------------" << endl;
+    }
 }
