@@ -23,11 +23,11 @@ int main() {
         Sleep(1000);
         cout << "At second " << i << ": \n" << endl;
         i++;
-        for(int j=0; j<rand()%3+1; j++) {
+        for(int j=0; j<rand()%5+1; j++) {
             packet p;
             p.id = id;
             id++;
-            p.size = rand()%(bucketSize*2);
+            p.size = rand()%outputRate;
             if(curSize + p.size > bucketSize) {
                 cout << "Packet with id " << p.id << " and size " << p.size << " dropped" << endl;
             } else {
@@ -40,13 +40,10 @@ int main() {
         cout << "Packets before transmission is " << stored.size() << endl;        
         int n = outputRate;
         int rate = 0;
-        while(n != 0) {
+        while(stored.size() != 0 && n != 0) {
             if(n < stored[0].size) {
-                cout << "Packet with id " << stored[0].id << " and size " << stored[0].size << " partially transmitted" << endl;
-                stored[0].size -= n;
-                curSize -= n;
-                rate = outputRate;
-                n = 0;
+                cout << "Waiting for next interval" << endl;
+                break;
             } else {
                 curSize -= stored[0].size;
                 cout << "Packet with id " << stored[0].id << " and size " << stored[0].size << " transmitted" << endl;
